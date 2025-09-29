@@ -14,6 +14,13 @@ local rotX, rotY, rotZ = 0, 0, 0
 local cam = { x = 0, y = 0, z = -700 }
 local focalLength = 800
 
+local MIN_CAM_Z = -2000
+local MAX_CAM_Z = -200
+local ZOOM_STEP = 50
+
+local isDragging = false
+local lastMouseX, lastMouseY = 0, 0
+
 local emitters = {
     { color = { 0.9, 0.3, 0.3 } },
     { color = { 0.3, 0.9, 0.4 } },
@@ -58,6 +65,23 @@ function love.mousepressed(x, y, button)
         selected = hoveredIndex
         device = devices[selected]
         device:start(sampleCount, 44100, 16, 1)
+    elseif device and button == 1 then
+        isDragging = true
+        lastMouseX, lastMouseY = x, y
+    end
+end
+
+function love.mousereleased(x, y, button)
+    if button == 1 then
+        isDragging = false
+    end
+end
+
+function love.wheelmoved(x, y)
+    if y > 0 then
+        cam.z = math.min(MAX_CAM_Z, cam.z + ZOOM_STEP)
+    elseif y < 0 then
+        cam.z = math.max(MIN_CAM_Z, cam.z - ZOOM_STEP)
     end
 end
 
@@ -74,10 +98,13 @@ local function rotate3D(x, y, z, ax, ay, az)
     local cx, sx = cos(ax), sin(ax)
     local cy, sy = cos(ay), sin(ay)
     local cz, sz = cos(az), sin(az)
+
     local y1, z1 = y * cx - z * sx, y * sx + z * cx
     y, z = y1, z1
-    local x1, z2 = x * cy + z * sy, -x *sy + z * cy
+
+    local x1, z2 = x * cy + z * sy, -x * sy + z * cy
     x, z = x1, z2
+
     local x2, y2 = x * cz - y * sz, x * sz + y * cz
     return x2, y2, z
 end
@@ -161,9 +188,13 @@ function love.update(dt)
         end
     end
 
-    rotX = rotX + dt * 0.05
-    rotY = rotY + dt * 0.03
-    rotZ = rotZ + dt * 0.02
+    if isDragging then
+        local mx, my = love.mouse.getPosition()
+        local dx, dy = mx - lastMouseX, my - lastMouseY
+        rotY = rotY - dx * 0.01
+        rotX = rotX + dy * 0.01
+        lastMouseX, lastMouseY = mx, my
+    end
 end
 
 function love.draw()
@@ -209,5 +240,6 @@ function love.draw()
         love.graphics.print("Listening to: " .. devices[selected]:getName() .. " (Esc to reselect)", 20, 20)
         love.graphics.print("Particles: " .. #particles .. " / " .. MAX_PARTICLES, 20, 40)
         love.graphics.print(string.format("RMS: %.3f", volume), 20, 60)
+        love.graphics.print("Camera Z: " .. cam.z, 20, 80)
     end
 end
