@@ -1,0 +1,68 @@
+name: Build and Deploy LÖVE Web
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Install love.js and zip
+        run: |
+          sudo apt-get update && sudo apt-get install -y zip
+          npm -g i love.js
+
+      - name: Make build script executable
+        run: chmod +x ./build-web.sh
+
+      - name: Run build script
+        run: ./build-web.sh
+
+      - name: Show file tree before upload
+        run: |
+          echo "==== Project Root ===="
+          ls -R .
+          echo "==== web-build (before upload) ===="
+          if [ -d "./web-build" ]; then
+            ls -R ./web-build
+          else
+            echo "web-build directory not found!"
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./web-build
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Verify deployed artifact structure
+        run: |
+          echo "==== Deployment step finished ===="
+          echo "The deployed artifact should contain:"
+          ls -R $GITHUB_WORKSPACE || true
