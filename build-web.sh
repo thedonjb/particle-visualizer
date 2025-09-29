@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-GAME_NAME="don-visualizer"
+GAME_NAME="particle-visualizer"
 LOVE_FILE="$GAME_NAME.love"
 OUTPUT_DIR="web-build"
 
