@@ -24,25 +24,15 @@ jobs:
           node-version: 'lts/*'
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y zip
+        run: |
+          sudo apt-get update && sudo apt-get install -y zip
+          npm install -g Davidobot/love.js
 
       - name: Make build script executable
         run: chmod +x ./build-web.sh
 
       - name: Run build script
         run: ./build-web.sh
-
-      - name: Show file tree before upload
-        run: |
-          echo "==== Project Root ===="
-          ls -R .
-          echo "==== web-output (before upload) ===="
-          if [ -d "./web-output" ]; then
-            ls -R ./web-output
-          else
-            echo "web-output directory not found!"
-            exit 1
-          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

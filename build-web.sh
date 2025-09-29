@@ -7,11 +7,11 @@ OUTPUT_DIR="web-output"
 
 rm -rf "$OUTPUT_DIR" "$LOVE_FILE"
 
-echo "[*] Packaging $GAME_NAME into $LOVE_FILE (ignoring .git and .gitignore entries)..."
+echo "[*] Packaging $GAME_NAME into $LOVE_FILE..."
 zip -9 -r "$LOVE_FILE" . -x@.gitignore -x '*.git*'
 
 echo "[*] Building web version into $OUTPUT_DIR (compatibility mode for GitHub Pages)..."
-npx love.js -c "$LOVE_FILE" "$OUTPUT_DIR"
+love.js -c "$LOVE_FILE" "$OUTPUT_DIR"
 
 if [ ! -d "$OUTPUT_DIR" ]; then
     echo "[!] Build failed: $OUTPUT_DIR not created"
