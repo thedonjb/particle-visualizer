@@ -1,3 +1,71 @@
+# === Project-specific ===
 .vscode/
 web-build/
+web-output/
 *.love
+
+# === Node.js (ignore EVERYTHING, including configs) ===
+node_modules/
+package.json
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+*.tgz
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage
+*.lcov
+
+# Dependency directories
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# npm / yarn / pnpm caches
+.npm/
+.pnpm/
+.yarn/
+.eslintcache
+
+# Microbundle / Rollup / tsc caches
+.rpt2_cache/
+.rts2_cache_*/
+
+# Parcel / Webpack cache
+.cache
+.parcel-cache
+
+# Common build outputs
+dist/
+build/
+
+# Framework outputs
+.next/
+.nuxt/
+.remix/
+
+# Hosting configs
+.vercel/
+.netlify/
+
+# Env files
+.env
+.env.*
