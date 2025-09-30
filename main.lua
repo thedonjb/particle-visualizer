@@ -161,7 +161,7 @@ function love.update(dt)
 
     -- Update active visualizer
     if device then
-        visualizer.update(dt, volume, emitters, samples)
+        visualizer.update(dt, volume, emitters, samples, cam)
     end
 
     -- Camera rotation via drag
