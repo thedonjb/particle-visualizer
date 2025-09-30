@@ -1,10 +1,8 @@
--- ./modules/firework3d.lua
 local firework3d = {}
 
 local trails = {}
 local MAX_TRAILS = 1200
 
--- 3D helpers (same as burst.lua)
 local function rotate3D(x, y, z, ax, ay, az)
     local cos, sin = math.cos, math.sin
     local cx, sx = cos(ax), sin(ax)

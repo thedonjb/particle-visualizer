@@ -1,10 +1,8 @@
--- ./modules/spiral3d.lua
 local spiral3d = {}
 
 local arms = {}
 local MAX_ARMS = 3000
 
--- 3D helpers (reuse burst.lua style)
 local function rotate3D(x, y, z, ax, ay, az)
     local cos, sin = math.cos, math.sin
     local cx, sx = cos(ax), sin(ax)
@@ -29,7 +27,6 @@ local function project3D(x, y, z, cam, focalLength)
     return sx, sy, dz
 end
 
--- Random scatter direction
 local function randomScatter()
     local a1 = math.random() * math.pi * 2
     local a2 = math.random() * math.pi
@@ -38,7 +35,6 @@ local function randomScatter()
            math.cos(a2)
 end
 
--- Update
 function spiral3d.update(dt, volume, emitters)
     if volume > 0.02 then
         for _, emitter in ipairs(emitters) do
@@ -72,7 +68,6 @@ function spiral3d.update(dt, volume, emitters)
 
     for i = #arms, 1, -1 do
         local a = arms[i]
-        -- Spiral + scatter
         a.angle = a.angle + dt * a.spin
         a.radius = a.radius + dt * a.drift * 0.2
         a.x = a.x + a.dx * dt + math.cos(a.angle) * a.radius * 0.05
@@ -88,7 +83,6 @@ function spiral3d.update(dt, volume, emitters)
     end
 end
 
--- Draw
 function spiral3d.draw(rotX, rotY, rotZ, cam, focalLength, bloomIntensity)
     love.graphics.setBlendMode("add")
 

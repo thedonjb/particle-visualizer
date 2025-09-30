@@ -74,12 +74,10 @@ function galaxy3d.update(dt, volume, emitters)
     end
 end
 
--- Draw
 function galaxy3d.draw(rotX, rotY, rotZ, cam, focalLength, bloomIntensity)
     love.graphics.setBlendMode("add")
 
     for _, s in ipairs(stars) do
-        -- Rotate + project star
         local rx, ry, rz = rotate3D(s.x, s.y, s.z, rotX, rotY, rotZ)
         local sx, sy, dz = project3D(rx, ry, rz, cam, focalLength)
 

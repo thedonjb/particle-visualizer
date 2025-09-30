@@ -1,4 +1,3 @@
--- ./modules/burst3d.lua
 local burst3d = {}
 
 local particles = {}
