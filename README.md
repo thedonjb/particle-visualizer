@@ -34,22 +34,23 @@ For best results, run it on a desktop with a microphone or audio loopback device
 ## Controls
 
 * **Mouse click**: Select an input device (before one is active).
-* **Left click & drag**: Rotate the 3D particle field.
+* **Left click & drag**: Rotate the 3D camera.
 * **Scroll wheel**: Zoom the camera in/out.
 * **Escape**: Stop and return to device selection.
+* **Left / Right arrow keys**: Switch between available visualizers.
 
 ---
 
 ## Features
 
+* Multiple visualizer modules (burst, galaxy, firework, wave, spiral, etc.), with seamless switching.
 * Dynamic particle emission and bloom intensity based on RMS audio volume.
-* Smooth camera rotation and zoom for 3D perspective.
-* Support for both microphone and speaker-monitoring devices.
-* Performance-optimized particle system (up to 6,000 active particles).
-* Debug HUD showing:
-
+* Smooth 3D camera rotation and zoom.
+* Support for both microphone and speaker-monitor devices.
+* Optimized particle systems (thousands of particles in real-time).
+* On-screen HUD showing:
   * Selected device
-  * Particle count
+  * Current visualizer index / total visualizers
   * Current RMS volume
   * Camera Z-position
 

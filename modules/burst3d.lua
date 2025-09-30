@@ -1,5 +1,5 @@
--- ./modules/burst.lua
-local burst = {}
+-- ./modules/burst3d.lua
+local burst3d = {}
 
 local particles = {}
 local MAX_PARTICLES = 6000
@@ -28,7 +28,7 @@ local function project3D(x, y, z, cam, focalLength)
     return sx, sy, dz
 end
 
-function burst.update(dt, volume, emitters)
+function burst3d.update(dt, volume, emitters)
     if volume > 0.02 then
         for _, emitter in ipairs(emitters) do
             local count = math.floor(volume * 50)
@@ -69,7 +69,7 @@ function burst.update(dt, volume, emitters)
     end
 end
 
-function burst.draw(rotX, rotY, rotZ, cam, focalLength, bloomIntensity)
+function burst3d.draw(rotX, rotY, rotZ, cam, focalLength, bloomIntensity)
     love.graphics.setBlendMode("add")
 
     for _, p in ipairs(particles) do
@@ -89,8 +89,8 @@ function burst.draw(rotX, rotY, rotZ, cam, focalLength, bloomIntensity)
     love.graphics.setColor(1, 1, 1, 1)
 end
 
-function burst.reset()
+function burst3d.reset()
     particles = {}
 end
 
-return burst
+return burst3d
