@@ -43,7 +43,7 @@ For best results, run it on a desktop with a microphone or audio loopback device
 
 ## Features
 
-* Multiple visualizer modules (burst, galaxy, firework, wave, spiral, etc.), with seamless switching.
+* Multiple visualizer modules, with seamless switching.
 * Dynamic particle emission and bloom intensity based on RMS audio volume.
 * Smooth 3D camera rotation and zoom.
 * Support for both microphone and speaker-monitor devices.

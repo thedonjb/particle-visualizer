@@ -67,6 +67,11 @@ function love.load()
 end
 
 function love.keypressed(key)
+    if key == "c" and (love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")) then
+        love.event.quit()
+        return
+    end
+
     if not device then
         local num = tonumber(key)
         if num and devices[num] then
@@ -94,6 +99,10 @@ function love.keypressed(key)
 end
 
 function love.mousepressed(x, y, button)
+    if visualizer.mousepressed then
+        visualizer.mousepressed(x, y, button)
+    end
+
     if not device and button == 1 and hoveredIndex then
         selected = hoveredIndex
         device = devices[selected]
@@ -105,12 +114,26 @@ function love.mousepressed(x, y, button)
 end
 
 function love.mousereleased(x, y, button)
+    if visualizer.mousereleased then
+        visualizer.mousereleased(x, y, button)
+    end
+
     if button == 1 then
         isDragging = false
     end
 end
 
+function love.mousemoved(x, y, dx, dy)
+    if visualizer.mousemoved then
+        visualizer.mousemoved(x, y, dx, dy)
+    end
+end
+
 function love.wheelmoved(x, y)
+    if visualizer.wheelmoved then
+        visualizer.wheelmoved(x, y)
+    end
+
     if y > 0 then
         cam.z = math.min(MAX_CAM_Z, cam.z + ZOOM_STEP)
     elseif y < 0 then
@@ -121,7 +144,6 @@ end
 function love.update(dt)
     t = t + dt
 
-    -- Detect hovered device before selection
     if not device then
         hoveredIndex = nil
         local mx, my = love.mouse.getPosition()
@@ -134,7 +156,6 @@ function love.update(dt)
         end
     end
 
-    -- Capture audio samples
     if device then
         local soundData = device:getData()
         if soundData then
@@ -145,7 +166,6 @@ function love.update(dt)
         end
     end
 
-    -- Calculate RMS volume
     volume = 0
     for i = 1, #samples do
         volume = volume + samples[i] ^ 2
@@ -159,12 +179,10 @@ function love.update(dt)
 
     bloomIntensity = bloomIntensity + (volume * 3 - bloomIntensity) * dt * 8
 
-    -- Update active visualizer
     if device then
         visualizer.update(dt, volume, emitters, samples, cam)
     end
 
-    -- Camera rotation via drag
     if isDragging then
         local mx, my = love.mouse.getPosition()
         local dx, dy = mx - lastMouseX, my - lastMouseY
@@ -178,7 +196,6 @@ function love.draw()
     love.graphics.clear(0, 0, 0)
 
     if not device then
-        -- Device selection screen
         love.graphics.print("Select an input device (click or use number keys):", 20, 20)
         for i, d in ipairs(devices) do
             local label = d:getName()
