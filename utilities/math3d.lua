@@ -25,6 +25,9 @@ function math3d.project3D(x, y, z, cam, focalLength)
 end
 
 function math3d.lerp(a, b, t)
+    a = a or 0
+    b = b or 0
+    t = t or 0
     return a + (b - a) * t
 end
 

@@ -37,18 +37,32 @@ local deviceSpacing = 20
 -- Load visualizer modules dynamically
 -- ===============================
 local visualizers = {}
+
+do
+    local ok, module = pcall(require, "modules.burst3d")
+    if ok and type(module) == "table"
+        and module.update and module.draw and module.reset then
+        table.insert(visualizers, module)
+        print("Loaded visualizer first: burst3d")
+    else
+        print("Failed to load burst3d as first visualizer")
+    end
+end
+
 do
     local files = love.filesystem.getDirectoryItems("modules")
     for _, file in ipairs(files) do
         if file:match("%.lua$") then
             local name = file:gsub("%.lua$", "")
-            local ok, module = pcall(require, "modules." .. name)
-            if ok and type(module) == "table" 
-                and module.update and module.draw and module.reset then
-                table.insert(visualizers, module)
-                print("Loaded visualizer:", name)
-            else
-                print("Skipping invalid visualizer:", name)
+            if name ~= "burst3d" then
+                local ok, module = pcall(require, "modules." .. name)
+                if ok and type(module) == "table"
+                    and module.update and module.draw and module.reset then
+                    table.insert(visualizers, module)
+                    print("Loaded visualizer:", name)
+                else
+                    print("Skipping invalid visualizer:", name)
+                end
             end
         end
     end

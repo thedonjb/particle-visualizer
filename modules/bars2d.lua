@@ -1,6 +1,6 @@
 local math3d = require("utilities.math3d")
 
-local simple_bars = {}
+local bars2d = {}
 
 local bars = {}
 local numBars = 64
@@ -9,14 +9,14 @@ local maxHeight = 300
 
 local lerpSpeed = 10
 
-function simple_bars.reset()
+function bars2d.reset()
     bars = {}
     for i = 1, numBars do
         bars[i] = 0
     end
 end
 
-function simple_bars.update(dt, volume, emitters, samples, cam)
+function bars2d.update(dt, volume, emitters, samples, cam)
     if #samples > 0 then
         local binSize = math.floor(#samples / numBars)
         for i = 1, numBars do
@@ -40,7 +40,7 @@ function simple_bars.update(dt, volume, emitters, samples, cam)
     end
 end
 
-function simple_bars.draw(rotX, rotY, rotZ, cam, focalLength, bloomIntensity)
+function bars2d.draw(rotX, rotY, rotZ, cam, focalLength, bloomIntensity)
     local screenW, screenH = love.graphics.getDimensions()
     local centerX = screenW / 2
     local baseY = screenH - 100
@@ -53,4 +53,4 @@ function simple_bars.draw(rotX, rotY, rotZ, cam, focalLength, bloomIntensity)
     end
 end
 
-return simple_bars
+return bars2d
