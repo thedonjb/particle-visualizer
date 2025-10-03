@@ -1,4 +1,3 @@
--- modules/ringwave3d.lua
 local ringwave3d = {}
 local math3d = require("utilities.math3d")
 local spawn = require("utilities.spawn")
@@ -7,7 +6,6 @@ local rings = {}
 local MAX_RINGS = 600
 
 function ringwave3d.update(dt, volume, bassEnergy, emitters)
-    -- 🔹 Normal rings (based on overall volume, like original wave3d)
     if volume > 0.02 then
         for _, emitter in ipairs(emitters) do
             local count = math.floor(volume * 5)
@@ -17,21 +15,18 @@ function ringwave3d.update(dt, volume, bassEnergy, emitters)
         end
     end
 
-    -- 🔸 Bass-only rings (accent layer, alternate color)
     if bassEnergy > 0.08 then
         for _, emitter in ipairs(emitters) do
             local bassColor = { 1 - emitter.color[1], 1 - emitter.color[2], 1 - emitter.color[3] } 
-            -- invert-ish color for contrast
             table.insert(rings, spawn.waveRing(bassEnergy * 1.2, bassColor))
         end
     end
 
-    -- update all rings
     for i = #rings, 1, -1 do
         local r = rings[i]
         r.radius = r.radius + r.speed * dt
-        r.z      = r.z + dt * 40        -- drift in depth
-        r.life   = r.life - dt * 0.15   -- slower fade
+        r.z      = r.z + dt * 40
+        r.life   = r.life - dt * 0.15
         r.width  = r.width * (1 - dt * 0.05)
 
         if r.life <= 0 or r.width < 0.5 then
@@ -66,7 +61,6 @@ function ringwave3d.draw(rotX, rotY, rotZ, cam, focalLength, bloomIntensity)
 
         local rCol, gCol, bCol = r.color[1], r.color[2], r.color[3]
 
-        -- glow layering
         for glow = 3, 1, -1 do
             local alpha = (r.life * 0.15 * bloomIntensity) / glow
             love.graphics.setColor(rCol, gCol, bCol, alpha)
