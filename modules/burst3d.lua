@@ -5,7 +5,7 @@ local spawn = require("utilities.spawn")
 local particles = {}
 local MAX_PARTICLES = 6000
 
-function burst3d.update(dt, volume, emitters)
+function burst3d.update(dt, volume, bassEnergy, emitters, samples, cam)
     if volume > 0.02 then
         for _, emitter in ipairs(emitters) do
             local count = math.floor(volume * 50)

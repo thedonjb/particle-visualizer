@@ -112,9 +112,36 @@ function love.keypressed(key)
     end
 end
 
+local function makeErrorVisualizer(name, err)
+    return {
+        update = function() end,
+        reset = function() end,
+        draw = function()
+            love.graphics.setColor(1, 0.2, 0.2, 1)
+            love.graphics.print(
+                "Visualizer '" .. tostring(name) .. "' crashed:\n" .. tostring(err),
+                40, 120
+            )
+            love.graphics.setColor(1, 1, 1, 1)
+        end
+    }
+end
+
+local function safeCall(method, ...)
+    if not visualizer or not visualizer[method] then return end
+    local ok, result = pcall(visualizer[method], ...)
+    if not ok then
+        local name = tostring(currentVisualizerIndex)
+        print("Visualizer error (" .. name .. ") in " .. method .. ":", result)
+        visualizers[currentVisualizerIndex] = makeErrorVisualizer(name, result)
+        visualizer = visualizers[currentVisualizerIndex]
+    end
+    return result
+end
+
 function love.mousepressed(x, y, button)
     if visualizer.mousepressed then
-        visualizer.mousepressed(x, y, button)
+        safeCall("mousepressed", x, y, button)
     end
 
     if not device and button == 1 and hoveredIndex then
@@ -129,7 +156,7 @@ end
 
 function love.mousereleased(x, y, button)
     if visualizer.mousereleased then
-        visualizer.mousereleased(x, y, button)
+        safeCall("mousereleased", x, y, button)
     end
 
     if button == 1 then
@@ -139,13 +166,13 @@ end
 
 function love.mousemoved(x, y, dx, dy)
     if visualizer.mousemoved then
-        visualizer.mousemoved(x, y, dx, dy)
+        safeCall("mousemoved", x, y, dx, dy)
     end
 end
 
 function love.wheelmoved(x, y)
     if visualizer.wheelmoved then
-        visualizer.wheelmoved(x, y)
+        safeCall("wheelmoved", x, y)
     end
 
     if y > 0 then
@@ -191,10 +218,29 @@ function love.update(dt)
         volume = MAX_VOLUME
     end
 
+    volume = 0
+    for i = 1, #samples do
+        volume = volume + samples[i] ^ 2
+    end
+    if #samples > 0 then
+        volume = math.sqrt(volume / #samples)
+    end
+    if volume > MAX_VOLUME then
+        volume = MAX_VOLUME
+    end
+
+    local bassEnergy = 0
+    for i = 1, #samples, 4 do
+        bassEnergy = bassEnergy + samples[i] ^ 2
+    end
+    if #samples > 0 then
+        bassEnergy = math.sqrt(bassEnergy / (#samples / 4))
+    end
+
     bloomIntensity = bloomIntensity + (volume * 3 - bloomIntensity) * dt * 8
 
     if device then
-        visualizer.update(dt, volume, emitters, samples, cam)
+        safeCall("update", dt, volume, bassEnergy, emitters, samples, cam)
     end
 
     if isDragging then
@@ -228,12 +274,14 @@ function love.draw()
         end
     else
         -- Visualizer draw
-        visualizer.draw(rotX, rotY, rotZ, cam, focalLength, bloomIntensity)
+        safeCall("draw", rotX, rotY, rotZ, cam, focalLength, bloomIntensity)
 
         -- HUD info
         love.graphics.setColor(1, 1, 1, 1)
         love.graphics.print("Listening to: " .. devices[selected]:getName() .. " (Esc to reselect)", 20, 20)
-        love.graphics.print("Visualizer: " .. tostring(currentVisualizerIndex) .. " / " .. #visualizers .. " (left/right to switch)", 20, 40)
+        love.graphics.print(
+            "Visualizer: " .. tostring(currentVisualizerIndex) .. " / " .. #visualizers .. " (left/right to switch)", 20,
+            40)
         love.graphics.print(string.format("RMS: %.3f", volume), 20, 60)
         love.graphics.print("Camera Z: " .. cam.z, 20, 80)
     end
