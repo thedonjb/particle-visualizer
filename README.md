@@ -56,7 +56,11 @@ For best results, run it on a desktop with a microphone or audio loopback device
 
 ---
 
-## Screenshots / Demo
+Here’s your updated `README.md` section with **`screenshot3.png`** added, showcasing a *different mode* of the visualizer:
+
+---
+
+## 📸 Screenshots / Demo
 
 Here are some examples of the visualizer in action:
 
@@ -68,6 +72,11 @@ Here are some examples of the visualizer in action:
 <p align="center">
   <img src="docs/screenshot2.png" alt="Particle Visualizer Screenshot 2" width="600"/><br/>
   <em>Rotated view of 3D particle field</em>
+</p>
+
+<p align="center">
+  <img src="docs/screenshot3.png" alt="Particle Visualizer Screenshot 3" width="600"/><br/>
+  <em>Alternate cube-based visualizer mode with directional particle bursts</em>
 </p>
 
 <p align="center">
